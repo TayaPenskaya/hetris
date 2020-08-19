@@ -105,7 +105,16 @@ blockCount shape = length $ filter isNothing xs
 -- | Shape invariant (shapes have at least one row, at least one column,
 -- and are rectangular)
 prop_Shape :: Shape -> Bool
-prop_Shape = error "A04 prop_Shape undefined"
+prop_Shape shape
+  | w < 1 || h < 1 || not (isRectangle $ rows shape) = False
+  | otherwise = True
+  where (w, h) = shapeSize shape
+        
+        isRectangle :: [Row] -> Bool
+        isRectangle [x] = True
+        isRectangle (x:xs:xss)
+          | length x == length xs = isRectangle (xs:xss)
+          | otherwise = False
 
 -- * Test data generators
 
