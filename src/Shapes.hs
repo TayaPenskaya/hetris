@@ -121,7 +121,7 @@ prop_Shape shape
 -- ** A05
 -- | A random generator for colours
 rColour :: Gen Colour
-rColour = error "A05 rColour undefined"
+rColour = elements [Black, Red, Green, Yellow, Blue, Purple, Cyan, Grey]
 
 instance Arbitrary Colour where
   arbitrary = rColour
@@ -129,8 +129,7 @@ instance Arbitrary Colour where
 -- ** A06
 -- | A random generator for shapes
 rShape :: Gen Shape
-rShape = error "A06 rShape undefined"
-
+rShape = elements allShapes
 
 instance Arbitrary Shape where
   arbitrary = rShape
