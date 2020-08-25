@@ -175,9 +175,17 @@ padShapeTo (w, h) shape = padShape (w - w', h - h') shape
 
 -- ** A11
 
+-- | Test if two rows overlap
+rowsOverlap :: Row -> Row -> Bool
+rowsOverlap r1 r2 
+  | length r1 /= length r2 = False
+  | otherwise = and $ zipWith (==) r1 r2
+
 -- | Test if two shapes overlap
 overlaps :: Shape -> Shape -> Bool
-s1 `overlaps` s2 = error "A11 overlaps undefined"
+s1 `overlaps` s2
+  | shapeSize s1 /= shapeSize s2 = False
+  | otherwise = and $ zipWith rowsOverlap (rows s1) (rows s2) 
 
 -- ** A12
 -- | zipShapeWith, like 'zipWith' for lists
