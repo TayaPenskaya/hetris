@@ -181,7 +181,7 @@ rowsOverlap r1 r2 = or $ zipWith (\x y -> isJust x && isJust y) r1 r2
 
 -- | Test if two shapes overlap
 overlaps :: Shape -> Shape -> Bool
-s1 `overlaps` s2 = or $ zipWith rowsOverlap (rows s1) (rows s2) 
+s1 `overlaps` s2 = or $ zipWith rowsOverlap (rows s1) (rows s2)
 
 -- ** A12
 -- | zipShapeWith, like 'zipWith' for lists
@@ -201,4 +201,9 @@ blackClashes = zipShapeWith clash
 -- | Combine two shapes. The two shapes should not overlap.
 -- The resulting shape will be big enough to fit both shapes.
 combine :: Shape -> Shape -> Shape
-s1 `combine` s2 = error "A13 zipShapeWith undefined"
+s1 `combine` s2 = blackClashes s1' s2'
+  where 
+    (s1', s2') = (padShapeTo (w, h) s1, padShapeTo (w, h) s2)
+    (w1, h1) = shapeSize s1
+    (w2, h2) = shapeSize s2
+    (w, h) = (max w1 w2, max h1 h2)
