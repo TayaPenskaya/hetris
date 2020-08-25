@@ -158,7 +158,7 @@ shiftDown n (Shape rlist)
  
 -- | shiftShape adds empty squares above and to the left of the shape
 shiftShape :: (Int,Int) -> Shape -> Shape
-shiftShape (d, r) = shiftDown d . shiftRight r
+shiftShape (r, d) = shiftRight r . shiftDown d
 
 -- ** A09
 -- | padShape adds empty sqaure below and to the right of the shape
