@@ -137,14 +137,28 @@ instance Arbitrary Shape where
 -- * Transforming shapes
 
 -- ** A07
--- | Rotate a shape 90 degrees
+-- | Rotate a shape 90 degrees clockwise
 rotateShape :: Shape -> Shape
-rotateShape = error "A07 rotateShape undefined"
+rotateShape (Shape rows) = Shape $ transpose $ reverse rows
 
 -- ** A08
+
+-- | shiftRight adds empty squares the left of the shape
+shiftRight :: Int -> Shape -> Shape
+shiftRight n (Shape rlist)
+  | n == 0 = Shape rlist
+  | otherwise = shiftRight (n-1) $ Shape $ map (Nothing:) rlist
+
+-- | shiftDown adds empty squares above of the shape
+shiftDown :: Int -> Shape -> Shape
+shiftDown n (Shape rlist)
+  | n == 0 = Shape rlist
+  | otherwise = shiftDown (n-1) $ Shape $ emptyRow w : rlist
+  where (w, h) = shapeSize $ Shape rlist
+ 
 -- | shiftShape adds empty squares above and to the left of the shape
 shiftShape :: (Int,Int) -> Shape -> Shape
-shiftShape = error "A08 shiftShape undefined"
+shiftShape (d, r) = shiftDown d . shiftRight r
 
 -- ** A09
 -- | padShape adds empty sqaure below and to the right of the shape
