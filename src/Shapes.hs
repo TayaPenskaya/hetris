@@ -1,7 +1,7 @@
 -- | Types and functions for shapes. The list of all tetris pieces.
 module Shapes where
 import Data.List(transpose)
-import Data.Maybe(isNothing)
+import Data.Maybe(isNothing, isJust)
 import Test.QuickCheck
 
 -- * Shapes
@@ -177,20 +177,25 @@ padShapeTo (w, h) shape = padShape (w - w', h - h') shape
 
 -- | Test if two rows overlap
 rowsOverlap :: Row -> Row -> Bool
-rowsOverlap r1 r2 
-  | length r1 /= length r2 = False
-  | otherwise = and $ zipWith (==) r1 r2
+rowsOverlap r1 r2 = or $ zipWith (\x y -> isJust x && isJust y) r1 r2
 
 -- | Test if two shapes overlap
 overlaps :: Shape -> Shape -> Bool
-s1 `overlaps` s2
-  | shapeSize s1 /= shapeSize s2 = False
-  | otherwise = and $ zipWith rowsOverlap (rows s1) (rows s2) 
+s1 `overlaps` s2 = or $ zipWith rowsOverlap (rows s1) (rows s2) 
 
 -- ** A12
 -- | zipShapeWith, like 'zipWith' for lists
 zipShapeWith :: (Square->Square->Square) -> Shape -> Shape -> Shape
-zipShapeWith = error "A12 zipShapeWith undefined"
+zipShapeWith f (Shape r1) (Shape r2) = Shape $ zipWith (zipWith f) r1 r2
+
+
+blackClashes :: Shape -> Shape -> Shape
+blackClashes = zipShapeWith clash  
+  where clash :: Square -> Square -> Square 
+        clash Nothing Nothing = Nothing
+        clash Nothing s       = s
+        clash s       Nothing = s
+        clash (Just c1) (Just c2) = Just Black
 
 -- ** A13
 -- | Combine two shapes. The two shapes should not overlap.
