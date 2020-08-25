@@ -146,13 +146,13 @@ rotateShape (Shape rows) = Shape $ transpose $ reverse rows
 -- | shiftRight adds empty squares the left of the shape
 shiftRight :: Int -> Shape -> Shape
 shiftRight n (Shape rlist)
-  | n == 0 = Shape rlist
+  | n <= 0 = Shape rlist
   | otherwise = shiftRight (n-1) $ Shape $ map (Nothing:) rlist
 
 -- | shiftDown adds empty squares above of the shape
 shiftDown :: Int -> Shape -> Shape
 shiftDown n (Shape rlist)
-  | n == 0 = Shape rlist
+  | n <= 0 = Shape rlist
   | otherwise = shiftDown (n-1) $ Shape $ emptyRow w : rlist
   where (w, h) = shapeSize $ Shape rlist
  
@@ -163,12 +163,13 @@ shiftShape (r, d) = shiftRight r . shiftDown d
 -- ** A09
 -- | padShape adds empty sqaure below and to the right of the shape
 padShape :: (Int,Int) -> Shape -> Shape
-padShape = error "A09 padShape undefined"
+padShape (h, v) shape = rotateShape . rotateShape $ shiftShape (h, v) $ rotateShape . rotateShape $ shape
 
 -- ** A10
 -- | pad a shape to a given size
 padShapeTo :: (Int,Int) -> Shape -> Shape
-padShapeTo = error "A10 padShapeTo undefined"
+padShapeTo (w, h) shape = padShape (w - w', h - h') shape
+  where (w', h') = shapeSize shape
 
 -- * Comparing and combining shapes
 
